@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 class Sach {
@@ -10,129 +11,218 @@ class Sach {
 }
 
 public class BTT52 {
+    static int timViTri(ArrayList<Sach> ds, String ma) {
+        for (int i = 0; i < ds.size(); i++) {
+            if (ds.get(i).maS.equals(ma)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Sach[] ds = new Sach[0];
-        int n = 0;
+        ArrayList<Sach> dsSach = new ArrayList<>();
         int luaChon;
 
-        int tongSoLuong = 0;
-        double tongGiaTri = 0;
-
-        // ==================== BÀI 3 ====================
         do {
-            System.out.println("\n========== QUAN LY SACH ==========");
-            System.out.println("1. Nhap thong tin sach");
-            System.out.println("2. Xem tong so luong sach");
-            System.out.println("3. Xem tong gia tri sach");
-            System.out.println("4. Tim sach theo ma");
-            System.out.println("0. Thoat");
-            System.out.println("==================================");
+            System.out.println("1. Them sach");
+            System.out.println("2. Hien thi sach");
+            System.out.println("3. Tim sach");
+            System.out.println("4. Xoa sach");
+            System.out.println("5. Sua sach");
+            System.out.println("6. Tinh tong so luong");
+            System.out.println("7. Tinh tong gia tri");
+            System.out.println("8. Thoat");
             System.out.print("Nhap lua chon: ");
 
             luaChon = sc.nextInt();
             sc.nextLine();
 
             switch (luaChon) {
-                // ==================== BÀI 1 ====================
+                // 1. Them sach
                 case 1:
+                    Sach s = new Sach();
+                    System.out.println("\n--- Nhap thong tin sach moi ---");
+                    
+                    System.out.print("Ma sach: ");
+                    s.maS = sc.nextLine();
+
+                    // Kiem tra trung ma sach
+                    if (timViTri(dsSach, s.maS) != -1) {
+                        System.out.println("Loi: Ma sach da ton tai trong he thong!");
+                        break;
+                    }
+
+                    System.out.print("Ten sach: ");
+                    s.tenS = sc.nextLine();
+
+                    System.out.print("Ten tac gia: ");
+                    s.tenTacGia = sc.nextLine();
+
+                    // Kiem tra don gia > 0
                     do {
-                        System.out.print("Nhap so luong cuon sach can nhap: ");
-                        n = sc.nextInt();
-                        sc.nextLine();
-                        if (n <= 0) {
-                            System.out.println("n phai lon hon 0! Vui long nhap lai.");
-                        }
-                    } while (n <= 0);
-
-                    ds = new Sach[n];
-                    tongSoLuong = 0;
-                    tongGiaTri = 0;
-
-                    for (int i = 0; i < n; i++) {
-                        ds[i] = new Sach();
-
-                        System.out.println("\n--- Nhap sach thu " + (i + 1) + " ---");
-                        
-                        System.out.print("Ma sach: ");
-                        ds[i].maS = sc.nextLine();
-
-                        System.out.print("Ten sach: ");
-                        ds[i].tenS = sc.nextLine();
-
-                        System.out.print("Ten tac gia: ");
-                        ds[i].tenTacGia = sc.nextLine();
-
                         System.out.print("Don gia: ");
-                        ds[i].donGia = sc.nextDouble();
+                        s.donGia = sc.nextDouble();
+                        if (s.donGia <= 0) {
+                            System.out.println("Don gia phai lon hon 0! Vui long nhap lai.");
+                        }
+                    } while (s.donGia <= 0);
 
+                    // Kiem tra so luong > 0
+                    do {
                         System.out.print("So luong: ");
-                        ds[i].soLuong = sc.nextInt();
+                        s.soLuong = sc.nextInt();
+                        if (s.soLuong <= 0) {
+                            System.out.println("So luong phai lon hon 0! Vui long nhap lai.");
+                        }
+                    } while (s.soLuong <= 0);
 
-                        System.out.print("Nam xuat ban: ");
-                        ds[i].namXB = sc.nextInt();
+                    System.out.print("Nam xuat ban: ");
+                    s.namXB = sc.nextInt();
+                    sc.nextLine();
+
+                    dsSach.add(s);
+                    System.out.println(">> Them sach thanh cong!");
+                    break;
+
+                // 2. Hien thi sach
+                case 2:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
+                    } else {
+                        System.out.println("\n--- DANH SACH SACH TRONG THU VIEN ---");
+                        for (int i = 0; i < dsSach.size(); i++) {
+                            Sach b = dsSach.get(i);
+                            System.out.printf("%d. Ma: %s | Ten: %s | TG: %s | Gia: %.0f | SL: %d | NamXB: %d%n",
+                                    (i + 1), b.maS, b.tenS, b.tenTacGia, b.donGia, b.soLuong, b.namXB);
+                        }
+                    }
+                    break;
+
+                // 3. Tim sach
+                case 3:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
+                        break;
+                    }
+                    System.out.print("Nhap ma sach can tim: ");
+                    String maTim = sc.nextLine();
+                    int vtTim = timViTri(dsSach, maTim);
+
+                    if (vtTim == -1) {
+                        System.out.println("=> Khong tim thay ma sach: " + maTim);
+                    } else {
+                        Sach b = dsSach.get(vtTim);
+                        System.out.println("=> TIM THAY SACH:");
+                        System.out.println("- Ma sach: " + b.maS);
+                        System.out.println("- Ten sach: " + b.tenS);
+                        System.out.println("- Tac gia: " + b.tenTacGia);
+                        System.out.printf("- Don gia: %.0f%n", b.donGia);
+                        System.out.println("- So luong: " + b.soLuong);
+                        System.out.println("- Nam XB: " + b.namXB);
+                    }
+                    break;
+
+                // 4. Xoa sach
+                case 4:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
+                        break;
+                    }
+                    System.out.print("Nhap ma sach can xoa: ");
+                    String maXoa = sc.nextLine();
+                    int vtXoa = timViTri(dsSach, maXoa);
+
+                    if (vtXoa == -1) {
+                        System.out.println("=> Khong tim thay ma sach de xoa!");
+                    } else {
+                        dsSach.remove(vtXoa);
+                        System.out.println(">> Da xoa thanh cong sach co ma: " + maXoa);
+                    }
+                    break;
+
+                // 5. Sua sach
+                case 5:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
+                        break;
+                    }
+                    System.out.print("Nhap ma sach can sua: ");
+                    String maSua = sc.nextLine();
+                    int vtSua = timViTri(dsSach, maSua);
+
+                    if (vtSua == -1) {
+                        System.out.println("=> Khong tim thay ma sach de sua!");
+                    } else {
+                        Sach b = dsSach.get(vtSua);
+                        System.out.println("--- Nhap thong tin moi cho ma " + maSua + " ---");
+                        
+                        System.out.print("Ten sach moi: ");
+                        b.tenS = sc.nextLine();
+
+                        System.out.print("Ten tac gia moi: ");
+                        b.tenTacGia = sc.nextLine();
+
+                        do {
+                            System.out.print("Don gia moi: ");
+                            b.donGia = sc.nextDouble();
+                            if (b.donGia <= 0) {
+                                System.out.println("Don gia phai lon hon 0! Vui long nhap lai.");
+                            }
+                        } while (b.donGia <= 0);
+
+                        do {
+                            System.out.print("So luong moi: ");
+                            b.soLuong = sc.nextInt();
+                            if (b.soLuong <= 0) {
+                                System.out.println("So luong phai lon hon 0! Vui long nhap lai.");
+                            }
+                        } while (b.soLuong <= 0);
+
+                        System.out.print("Nam xuat ban moi: ");
+                        b.namXB = sc.nextInt();
                         sc.nextLine();
 
-                        // ==================== BÀI 2 ====================
-                        tongSoLuong += ds[i].soLuong;
-                        tongGiaTri += ds[i].donGia * ds[i].soLuong;
-                    }
-                    System.out.println(">> Da nhap thanh cong " + n + " cuon sach vao mang!");
-                    break;
-
-                case 2:
-                    if (ds.length == 0) {
-                        System.out.println("[!] Chua co du lieu! Vui long nhap sach o muc 1 truoc.");
-                    } else {
-                        System.out.println("Tong so luong sach: " + tongSoLuong);
+                        System.out.println(">> Cap nhat sach thanh cong!");
                     }
                     break;
 
-                case 3:
-                    if (ds.length == 0) {
-                        System.out.println("[!] Chua co du lieu! Vui long nhap sach o muc 1 truoc.");
+                // 6. Tinh tong so luong
+                case 6:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
                     } else {
+                        int tongSL = 0;
+                        for (Sach b : dsSach) {
+                            tongSL += b.soLuong;
+                        }
+                        System.out.println("Tong so luong tat ca cac sach: " + tongSL);
+                    }
+                    break;
+
+                // 7. Tinh tong gia tri
+                case 7:
+                    if (dsSach.isEmpty()) {
+                        System.out.println("[!] Danh sach dang trong!");
+                    } else {
+                        double tongGiaTri = 0;
+                        for (Sach b : dsSach) {
+                            tongGiaTri += b.donGia * b.soLuong;
+                        }
                         System.out.printf("Tong gia tri tat ca cac sach: %.0f%n", tongGiaTri);
                     }
                     break;
 
-                // ==================== BÀI 4 ====================
-                case 4:
-                    if (ds.length == 0) {
-                        System.out.println("[!] Chua co du lieu! Vui long nhap sach o muc 1 truoc.");
-                        break;
-                    }
-
-                    System.out.print("Nhap ma sach can tim: ");
-                    String maCanTim = sc.nextLine();
-                    boolean timThay = false;
-
-                    for (int i = 0; i < ds.length; i++) {
-                        if (ds[i].maS.equals(maCanTim)) {
-                            System.out.println("=> TIM THAY SACH:");
-                            System.out.println("- Ten sach: " + ds[i].tenS);
-                            System.out.println("- Tac gia: " + ds[i].tenTacGia);
-                            System.out.println("- Nam XB: " + ds[i].namXB);
-                            System.out.printf("- Don gia: %.0f%n", ds[i].donGia);
-                            System.out.println("- So luong: " + ds[i].soLuong);
-                            timThay = true;
-                            break;
-                        }
-                    }
-
-                    if (!timThay) {
-                        System.out.println("=> Khong tim thay sach co ma: " + maCanTim);
-                    }
-                    break;
-
-                case 0:
+                // 8. Thoat
+                case 8:
                     System.out.println("Thoat chuong trinh!");
                     break;
 
                 default:
                     System.out.println("Lua chon khong hop le, vui long chon lai!");
             }
-        } while (luaChon != 0);
+        } while (luaChon != 8);
 
         sc.close();
     }
